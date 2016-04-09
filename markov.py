@@ -6,9 +6,9 @@ class MarkovState:
 		self.follow = {}
 		self.total = 0
 	def __hash__(self):
-		return __hash__(self.state)
+		return hash(self.state)
 	def __eq__(self, another):
-		return hasattr(another, 'state') and self.state = another.state
+		return hasattr(another, 'state') and self.state == another.state
 
 	def is_matching(self, other):
 		return self.state == other

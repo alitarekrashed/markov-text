@@ -48,5 +48,35 @@ class TestStateGenerateNext(unittest.TestCase):
     x.append("foo")
     self.assertEqual(x.generate_next(), "foo")
 
+class TestStateHashAndEq(unittest.TestCase):
+  def test_eq_true(self):
+    x = MarkovState(("hello"))
+    x.append("foo")
+    y = MarkovState(("hello"))
+    self.assertTrue(x == y)
+
+  def test_eq_false(self):
+    x = MarkovState(("hello"))
+    x.append("foo")
+    y = MarkovState("world")
+    y.append("foo")
+    self.assertFalse(x == y)
+
+  def test_hash_true(self):
+    x = MarkovState(("hello"))
+    x.append("foo")
+    y = MarkovState(("hello"))
+    d = {}
+    d[x] = 5
+    self.assertTrue(y in d)
+
+  def test_hash_false(self):
+    x = MarkovState(("hello"))
+    x.append("foo")
+    y = MarkovState(("world"))
+    d = {}
+    d[x] = 5
+    self.assertFalse(y in d)
+
 if __name__ == '__main__':
     unittest.main()
