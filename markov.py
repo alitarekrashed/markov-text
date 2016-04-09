@@ -5,6 +5,10 @@ class MarkovState:
 		self.state = state
 		self.follow = {}
 		self.total = 0
+	def __hash__(self):
+		return __hash__(self.state)
+	def __eq__(self, another):
+		return hasattr(another, 'state') and self.state = another.state
 
 	def is_matching(self, other):
 		return self.state == other
