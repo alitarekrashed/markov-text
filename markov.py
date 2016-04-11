@@ -27,3 +27,27 @@ class MarkovState:
 			goal -= value
 			if goal <= 0:
 				return key
+
+class MarkovEngine:
+	def __init__(self):
+		self.states = []
+
+	def append_instance(self, state, next):
+		found = False
+		target = MarkovState(state)
+		for s in self.states:
+			if s == target:
+				found = True
+				s.append(next)
+
+		if not found:
+			target.append(next)
+			self.states.append(target)
+
+	def exists(self, state):
+		target = MarkovState(state)
+		for s in self.states:
+			if s == target:
+				return True
+		else:
+			return False
