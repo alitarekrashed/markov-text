@@ -1,7 +1,7 @@
 import random
 
 class MarkovState:
-	def __init__(self, state): #note, one element tuple being treated as a string, maybe a problem?, could just require size > 1
+	def __init__(self, state):
 		self.state = state
 		self.follow = {}
 		self.total = 0
@@ -51,6 +51,7 @@ class MarkovEngine:
 	def __init__(self):
 		self.states = []
 
+	#adds an occurence of a state to the engine
 	def append_instance(self, state, next):
 		found = False
 		target = MarkovState(state)
@@ -63,6 +64,7 @@ class MarkovEngine:
 			target.append(next)
 			self.states.append(target)
 
+	#checks to see if a state is being stored (might be unnecessary with get-state() function)
 	def exists(self, state):
 		target = MarkovState(state)
 		for s in self.states:
@@ -71,16 +73,19 @@ class MarkovEngine:
 		else:
 			return False
 
+	#matches parameter with state from storage
 	def get_state(self, to_match):
 		for s in self.states:
 			if s == to_match:
 				return s
 		return None
 
+	#gets a random state from the states stored by the engine
 	def get_random_state(self):
 		index = random.randint(0, len(self.states) - 1)
 		return self.states[index]
 
+	#takes a length for the result and returns a string
 	def generate_chain(self, length):
 		result = ""
 		current = self.get_random_state()
@@ -93,7 +98,7 @@ class MarkovEngine:
 			if next != None:
 				total_length += len(next) + 1
 				if total_length <= length:
-					result += " " + next
+					result += " " + lnext
 					tmp = current.adjust_state(next)
 					current = self.get_state(tmp)
 			
