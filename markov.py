@@ -1,106 +1,63 @@
 import random
 
-class MarkovState:
-	def __init__(self, state):
-		self.state = state
-		self.follow = {}
-		self.total = 0
-	def __hash__(self):
-		return hash(self.state)
-	def __eq__(self, another):
-		return hasattr(another, 'state') and self.state == another.state
-	def __str__(self):
-		result = ""
-		for x in range(0, len(self.state)):
-			result += self.state[x]
-			if(x < len(self.state) - 1):
-				result += " "
-		return result
-
-	def is_matching(self, other):
-		return self.state == other
-
-	def append(self, word):
-		if word in self.follow:
-			self.follow[word] += 1
-		else:
-			self.follow[word] = 1
-		self.total += 1
-
-	def generate_next(self):
-		if self.total == 0:
-			return None
-
-		goal = random.randint(0, self.total)
-
-		for key, value in self.follow.items():
-			goal -= value
-			if goal <= 0:
-				return key
-
-	def adjust_state(self, new):
-		adjusted = []
-		for x in range(1, len(self.state)):
-			adjusted.append(self.state[x])
-		adjusted.append(new)
-
-		return MarkovState(tuple(adjusted))
-
-
 class MarkovEngine:
 	def __init__(self):
-		self.states = []
+		self.states = {}
 
 	#adds an occurence of a state to the engine
 	def append_instance(self, state, next):
 		found = False
-		target = MarkovState(state)
-		for s in self.states:
-			if s == target:
-				found = True
-				s.append(next)
-
-		if not found:
-			target.append(next)
-			self.states.append(target)
+		if state in self.states:
+			follow = self.states.get(state)
+			follow.append(next)
+		else:
+			self.states[state] = [next]
 
 	#checks to see if a state is being stored (might be unnecessary with get-state() function)
 	def exists(self, state):
-		target = MarkovState(state)
-		for s in self.states:
-			if s == target:
-				return True
-		else:
-			return False
-
-	#matches parameter with state from storage
-	def get_state(self, to_match):
-		for s in self.states:
-			if s == to_match:
-				return s
-		return None
+		return state in self.states
 
 	#gets a random state from the states stored by the engine
 	def get_random_state(self):
 		index = random.randint(0, len(self.states) - 1)
-		return self.states[index]
+		all_keys = list(self.states.keys())
+		return all_keys[index]
+
+	def next_state(self, state):
+		if state in self.states:
+			follow = self.states.get(state)
+			index = random.randint(0, len(follow) - 1)
+			return follow[index]
+		else:
+			return None
+
+	def adjust_state(self, current, next):
+		adjusted = []
+		for x in range(1, len(current)):
+			adjusted.append(current[x])
+		
+		adjusted.append(next)
+		return tuple(adjusted)
 
 	#takes a length for the result and returns a string
 	def generate_chain(self, length):
 		result = ""
 		current = self.get_random_state()
-		result += str(current)
+		for x in range(0, len(current)):
+			result += current[x]
+			if x < len(current) - 1:
+				result += " "
+
 		total_length = len(result)
 
 		while total_length < length:
-			next = current.generate_next()
+			next = self.next_state(current)
 
 			if next != None:
 				total_length += len(next) + 1
 				if total_length <= length:
-					result += " " + lnext
-					tmp = current.adjust_state(next)
-					current = self.get_state(tmp)
+					result += " " + next
+					current = self.adjust_state(current, next)
 			
 			if next == None or current == None:
 				total_length = length
