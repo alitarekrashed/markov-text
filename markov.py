@@ -40,9 +40,13 @@ class MarkovEngine:
 		return tuple(adjusted)
 
 	#takes a length for the result and returns a string
-	def generate_chain(self, length):
+	def generate_chain(self, length, seed = None):
+		if seed is None:
+			current = self.get_random_state()
+		else:
+			current = seed
+
 		result = ""
-		current = self.get_random_state()
 		for x in range(0, len(current)):
 			result += current[x]
 			if x < len(current) - 1:

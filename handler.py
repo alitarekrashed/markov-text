@@ -1,6 +1,7 @@
 from markov import *
 import json
 import glob
+import random
 
 def text_dump(filename):
 	f = open(filename, 'r')
@@ -20,18 +21,34 @@ def text_dump(filename):
 def twitter_archive(filename):
 	allFiles = glob.glob(filename + '/data/js/tweets/*.js')
 	tweets_decoded = []
+	start_seeds = []
 	for month in allFiles:
 		tweet_file = open(month)
 		stringFile = "".join(tweet_file.readlines()[1:])
 		temp = json.loads(stringFile)
 		for tweet in temp:
-			tweets_decoded.append(tweet['text'])
+			if not 'retweeted_status' in tweet:
+				text = tweet['text'].split()
+				filtered_text = []
+				for word in text:
+					if not word.startswith('@') and not word.startswith('http'):
+						filtered_text.append(word)
+
+				tweets_decoded.append(filtered_text)
+				if(len(filtered_text) > 2):
+					start_seeds.append((filtered_text[0], filtered_text[1]))
+
 
 	m = MarkovEngine()	
 	f = open('output.txt', 'w')
 	for tweet in tweets_decoded:
-		t = tweet.split(' ')
-		for x in range(0, len(t) - 2):
-			m.append_instance((t[x], t[x+1]), t[x+2])
+		for x in range(0, len(tweet) - 2):
+			m.append_instance((tweet[x], tweet[x+1]), tweet[x+2])
 
-	print(m.generate_chain(140))
+	while True:
+		n = input('Press enter to generate a new chain, type \'stop\' to quit: ')
+		if n.lower() == 'stop':
+			break
+		print(m.generate_chain(140, start_seeds[random.randint(0, len(start_seeds) - 1)]))
+		print()
+		
