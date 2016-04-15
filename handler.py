@@ -45,10 +45,18 @@ def twitter_archive(filename):
 		for x in range(0, len(tweet) - 2):
 			m.append_instance((tweet[x], tweet[x+1]), tweet[x+2])
 
+	return (m, start_seeds)
+		
+if __name__ == '__main__':
+	filename = input("What is your twitter archive source? ")
+	engine_and_seeds = twitter_archive(filename)
+	m = engine_and_seeds[0]
+	start_seeds = engine_and_seeds[1]
+
+	length = int(input("What is the maximum length of the generated chains? "))
 	while True:
 		n = input('Press enter to generate a new chain, type \'stop\' to quit: ')
 		if n.lower() == 'stop':
 			break
-		print(m.generate_chain(140, start_seeds[random.randint(0, len(start_seeds) - 1)]))
+		print(m.generate_chain(length, start_seeds[random.randint(0, len(start_seeds) - 1)]))
 		print()
-		
