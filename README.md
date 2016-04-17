@@ -1,10 +1,8 @@
 # markov-text
 
-The goal of this project is to use markov chains to predict text based on a corpus. I think it might be fun to mess around with markov chains and it should serve as a relatively interesting project. 
+Markov chain text generator, implemented in python. Takes in a corpus to build the engine to generate the text chains, and then generates a chain until completion (or until an arbitrary length is reached).
+Currently set up to work with a twitter archive.
 
-This is preliminary planning. Work on this project started as a result of a 30-day git commit challenge, so the goal is to make a little progress every day (even if its as little as designing and updating this ReadME). This ReadME will serve as a sounding board for the current design as I work on this side project. 
 ### to-do
-- design class hierarchy for the project
-   - class to represent  (word1, word2, ..., wordn) and all the words they lead to (maybe use a member to hold all the result words, as well as probabilities)
-   - class to run the actual chaining to generate sentences
-- handle input: processing, creating the map of probabilities
+ - input handling for a corpus in the form a single txt file
+ - maybe use the twitter api to pull recent tweets from any given twitter user, and use that to generate text (as opposed to having to require access to a user's twitter archive)
