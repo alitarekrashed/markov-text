@@ -23,6 +23,7 @@ class MarkovEngine:
 		all_keys = list(self.states.keys())
 		return all_keys[index]
 
+	#get the next state for a markov chain given a state
 	def next_state(self, state):
 		if state in self.states:
 			follow = self.states.get(state)
@@ -31,6 +32,7 @@ class MarkovEngine:
 		else:
 			return None
 
+	#given a current state and the next word, create a new state ((current[1:]), next)
 	def adjust_state(self, current, next):
 		adjusted = []
 		for x in range(1, len(current)):
