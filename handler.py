@@ -48,15 +48,27 @@ def twitter_archive(filename):
 	return (m, start_seeds)
 		
 if __name__ == '__main__':
-	filename = input("What is your twitter archive source? ")
-	engine_and_seeds = twitter_archive(filename)
-	m = engine_and_seeds[0]
-	start_seeds = engine_and_seeds[1]
+ 	method = input("You can generate markov text chains using a twitter archive folder, or a txt file. If you would like to use a twitter archive, please enter [twitter archive], otherwise enter [text]")
+ 	if method == 'twitter archive':
+ 		filename = input("What is your twitter archive source? ")
+ 		engine_and_seeds = twitter_archive(filename)
+ 		m = engine_and_seeds[0]
+ 		start_seeds = engine_and_seeds[1]
+ 		length = int(input("What is the maximum length of the generated chains? "))
+ 		while True:
+ 			n = input('Press enter to generate a new chain, type \'stop\' to quit: ')
+ 			if n.lower() == 'stop':
+ 				break
+ 			print(m.generate_chain(length, start_seeds[random.randint(0, len(start_seeds) - 1)]))
+ 			print()
+ 	else:
+ 		filename = input("What is your text dump source? ")
+ 		engine = text_dump(filename)
+ 		length = int(input("What is the maximum length of the generated chains? "))
+ 		while True:
+ 			n = input('Press enter to generate a new chain, type \'stop\' to quit: ')
+ 			if n.lower() == 'stop':
+ 				break
+ 			print(engine.generate_chain(length))
+ 			print()
 
-	length = int(input("What is the maximum length of the generated chains? "))
-	while True:
-		n = input('Press enter to generate a new chain, type \'stop\' to quit: ')
-		if n.lower() == 'stop':
-			break
-		print(m.generate_chain(length, start_seeds[random.randint(0, len(start_seeds) - 1)]))
-		print()
